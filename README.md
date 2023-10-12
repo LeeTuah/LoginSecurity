@@ -87,6 +87,34 @@ A file called `LoginSecurityDemonstration.py` is provided alongside the program 
 
 3. Your account will be permanently deleted.
 
+## Screenshots
+
+Some screenshots related to the actual program:
+
+![Registration Page](screenshots/screenshot1.png)
+
+![Login Page](screenshots/screenshot2.png)
+
+![Change Username Page](screenshots/screenshot3.png)
+
+![Change Password Page](screenshots/screenshot4.png)
+
+![Logout Page](screenshots/screenshot5.png)
+
+![Account Deletion Page](screenshots/screenshot6.png)
+
+
+
+Accounts file in which all the accounts will be stored:
+
+![accounts.json](screenshots/account_file.png)
+
+
+Logs file:
+
+![logs file](screenshots/log_file.png)
+
+
 ## Developer
 
 This program was solely developed by LeeTuah.
@@ -94,6 +122,7 @@ This program was solely developed by LeeTuah.
 - [Instagram](https://www.instagram.com/leetuah7)
 - [Discord](https://discordapp.com/users/755753736462401536)
 - [Twitter](https://twitter.com/LeeTuahhhh)
+
 
 ## Acknowledgments
 
