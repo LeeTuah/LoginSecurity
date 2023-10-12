@@ -7,6 +7,7 @@ from time import sleep
 from random import randint
 from datetime import datetime
 from termcolor import colored, cprint
+import pprint
 
 #! Python 3.10 and later supported ONLY
 
@@ -115,10 +116,13 @@ class LoginSecurity:
 
     # priavte function to update the file from the accounts dict
     def __save_file(self):
+        # converting json to string in a human-friendly format
+        accounts_str = pprint.pformat(self.__accounts, compact=True, indent=4).replace("'",'"')
+
         # opening the file, clearing the entire file and dumping the dict into the file
         with open(self.file_loc, 'w') as file:
             file.truncate()
-            json.dump(self.__accounts, file)
+            print(accounts_str, file=file)
         
     # private function which returns the password of a given user
     def __get_password(self, name: str):
@@ -163,12 +167,12 @@ class LoginSecurity:
     def __verified_password(self, password):
         # if password is shorter than six characters
         if len(password) < 6:
-            print(f'{self.error}Password cannot be lesser than 6 characters.', file=stderr)
+            print(f'{self.error}Password cannot be lesser than 6 characters.\n', file=stderr)
             return False
         
         # if the password contains whitespaces
         if ' ' in password:
-            print(f'{self.error}Detected whitespaces in password.', file=stderr)
+            print(f'{self.error}Detected whitespaces in password.\n', file=stderr)
             return False
         
         # iterating through the password
@@ -178,7 +182,7 @@ class LoginSecurity:
 
             # if the ascii value is not applicable to be a good password
             if ascii_value < 33 or ascii_value > 126:
-                print(f'{self.error}{ch} is an invalid character.', file=stderr)
+                print(f'{self.error}{ch} is an invalid character.\n', file=stderr)
                 return False
             
         # returns True if all the conditions are met
@@ -199,7 +203,7 @@ class LoginSecurity:
 
             # if there is already an account with the given username or name is empty
             if name in self.__accounts or name == '':
-                print(f'{self.error}This account already exists.', file=stderr)
+                print(f'{self.error}This account already exists.\n', file=stderr)
                 continue
 
             break
@@ -226,7 +230,7 @@ class LoginSecurity:
         # updating logs
         self.__save_logs(f'Account registered: {name}')
 
-        sleeping_print(f'{self.program}Successfully registered your account.')
+        sleeping_print(f'\n{self.program}Successfully registered your account.')
 
     # function to login to an existing account
     def login(self):
@@ -244,7 +248,7 @@ class LoginSecurity:
 
             # if the name is empty or the name is the encryption key or the name is not logged in already
             if not name in self.__accounts or name == '' or name == 'key':
-                print(f'{self.error}Account with specified name doesnot exist.', file=stderr)
+                print(f'{self.error}Account with specified name doesnot exist.\n', file=stderr)
                 continue
             
             break
@@ -260,7 +264,7 @@ class LoginSecurity:
             # if the user runs out of tries
             if tries == 0:
                 sleeping_print(
-                    f'{self.program}You have been timed out for {self.timeout_duration} seconds.',
+                    f'\n{self.program}You have been timed out for {self.timeout_duration} seconds.',
                     duration=self.timeout_duration
                 )
                 tries = self.timeout_tries
@@ -272,14 +276,14 @@ class LoginSecurity:
             if password == self.__decrypt_password(acc_password):
                 self.__logged_in = True
                 self.__current_user = name
-                sleeping_print(f'{self.program}Successfully logged in.')
+                sleeping_print(f'\n{self.program}Successfully logged in.')
 
                 # updating logs
                 self.__save_logs(f'Account logged in: {name}')
                 break
 
             # if wrong password is given
-            print(f'{self.error}Incorrect Password.', file=stderr)
+            print(f'{self.error}Incorrect Password.\n', file=stderr)
             tries -= 1
 
     # function to change the username of the currently logged user
@@ -291,7 +295,7 @@ class LoginSecurity:
 
         # if the user is not logged in
         if not self.is_logged_in():
-            sleeping_print(f'{self.error}User is not logged in.', file=stderr)
+            sleeping_print(f'{self.error}User is not logged in.\n', file=stderr)
             return
         
         old_password = new_username = ''
@@ -307,7 +311,7 @@ class LoginSecurity:
             # if the user runs out of tries
             if tries == 0:
                 sleeping_print(
-                    f'{self.program}You have been timed out for {self.timeout_duration} seconds.',
+                    f'\n{self.program}You have been timed out for {self.timeout_duration} seconds.',
                     duration=self.timeout_duration
                 )
                 tries = self.timeout_tries
@@ -317,7 +321,7 @@ class LoginSecurity:
 
             # if the old password is given wrong
             if old_password != self.__decrypt_password(acc_password):
-                print(f'{self.error}Wrong password entered.', file=stderr)
+                print(f'{self.error}Wrong password entered.\n', file=stderr)
                 tries -= 1
                 continue
 
@@ -330,12 +334,12 @@ class LoginSecurity:
 
             # if no username is provided
             if new_username == '':
-                print(f'{self.error}Invalid username provided.', file=stderr)
+                print(f'{self.error}Invalid username provided.\n', file=stderr)
                 continue
 
             # if the new username is already defined
             if new_username in self.__accounts.keys():
-                print(f'{self.error}This username already exists.', file=stderr)
+                print(f'{self.error}This username already exists.\n', file=stderr)
                 continue
             
             break
@@ -351,7 +355,7 @@ class LoginSecurity:
         # updating the file
         self.__save_file()
 
-        sleeping_print(f'{self.program}Successfully changed your username.')
+        sleeping_print(f'\n{self.program}Successfully changed your username.')
 
     # function to change password of the user's account
     def change_password(self):
@@ -362,7 +366,7 @@ class LoginSecurity:
 
         # if the user is not logged in
         if not self.is_logged_in():
-            sleeping_print(f'{self.error}User is not logged in.', file=stderr)
+            sleeping_print(f'{self.error}User is not logged in.\n', file=stderr)
             return
 
         old_password = new_password = ''
@@ -378,7 +382,7 @@ class LoginSecurity:
             # if the user runs out of tries
             if tries == 0:
                 sleeping_print(
-                    f'{self.program}You have been timed out for {self.timeout_duration} seconds.',
+                    f'\n{self.program}You have been timed out for {self.timeout_duration} seconds.',
                     duration=self.timeout_duration
                 )
                 tries = self.timeout_tries
@@ -388,7 +392,7 @@ class LoginSecurity:
 
             # if the old password is given wrong
             if old_password != self.__decrypt_password(acc_password):
-                print(f'{self.error}Wrong password entered.', file=stderr)
+                print(f'{self.error}Wrong password entered.\n', file=stderr)
                 tries -= 1
                 continue
             
@@ -414,7 +418,7 @@ class LoginSecurity:
         # updating logs
         self.__save_logs(f'Account changed password: {self.__current_user}')
 
-        sleeping_print(f'{self.program}Successfully changed your password.')
+        sleeping_print(f'\n{self.program}Successfully changed your password.')
 
     # logging out of existing account
     def logout(self):
@@ -425,7 +429,7 @@ class LoginSecurity:
 
         # if the user is not logged in
         if not self.is_logged_in():
-            sleeping_print(f'{self.error}User is not logged in.', file=stderr)
+            sleeping_print(f'{self.error}User is not logged in.\n', file=stderr)
             return
 
         # verifying if the user is sure about their decision
@@ -433,7 +437,7 @@ class LoginSecurity:
 
         # if the user is unsure
         if not surity:
-            sleeping_print(f'{self.program}Aborting your choice.')
+            sleeping_print(f'\n{self.program}Aborting your choice.')
             return
         
         # updating logs
@@ -443,7 +447,7 @@ class LoginSecurity:
         self.__logged_in = False
         self.__current_user = ''
 
-        sleeping_print(f'{self.program}Successfully logged out of your account.')
+        sleeping_print(f'\n{self.program}Successfully logged out of your account.')
 
     # function to delete user accounts
     def delete_account(self):
@@ -454,7 +458,7 @@ class LoginSecurity:
 
         # if the user is not logged in
         if not self.is_logged_in():
-            sleeping_print(f'{self.error}User is not logged in.', file=stderr)
+            sleeping_print(f'{self.error}User is not logged in.\n', file=stderr)
             return
 
         # retrieving the actual password of the user
@@ -468,7 +472,7 @@ class LoginSecurity:
             # if the user runs out of choice
             if tries == 0:
                 sleeping_print(
-                    f'{self.program}You have been timed out for {self.timeout_duration} seconds.',
+                    f'\n{self.program}You have been timed out for {self.timeout_duration} seconds.',
                     duration=self.timeout_duration
                 )
                 tries = self.timeout_tries
@@ -478,7 +482,7 @@ class LoginSecurity:
 
             # if input password is not the same as account password
             if not password == self.__decrypt_password(acc_password):
-                print(f'{self.error}Wrong password enterted.', file=stderr)
+                print(f'{self.error}Wrong password enterted.\n', file=stderr)
                 tries -= 1
                 continue
 
@@ -495,7 +499,7 @@ class LoginSecurity:
         # updating the file
         self.__save_file()
 
-        sleeping_print(f'{self.program}Successfully deleted your account.')
+        sleeping_print(f'\n{self.program}Successfully deleted your account.')
     
 
 # this portion is only present for debugging
